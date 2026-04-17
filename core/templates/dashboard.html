@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Inventory</h2>
+            <a href="/dashboard/">Dashboard</a>
+            <a href="/products/">Products</a>
+            <a href="/billing/">Billing</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+
+            <h1>Dashboard 📊</h1>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Total Sales</h3>
+                    <p>₹{{ total_sales }}</p>
+                </div>
+
+                <div class="card">
+                    <h3>Total Orders</h3>
+                    <p>{{ total_orders }}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <h1 style="text-align:center;">Product List 📦</h1>
+<div style="text-align:center; margin-bottom:20px;">
+    <a href="/add-product/">
+        <button>Add Product ➕</button>
+    </a>
+</div>
+    <div class="login-box">
+        <ul>
+            {% for p in products %}
+        <li>
+            {{ p.name }} - ₹{{ p.price }} - Stock: {{ p.quantity }}
+            <a href="/edit-product/{{ p.id }}/">✏️ Edit</a>
+            <a href="/delete-product/{{ p.id }}/" style="color:red;">❌ Delete</a>
+            <a href="/stock/{{ p.id }}/">📦 Update Stock</a>
+        </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+
+</html>

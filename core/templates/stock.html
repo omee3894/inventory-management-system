@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Update Stock</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <h1 style="text-align:center;">Update Stock 📦</h1>
+
+    <div class="login-box">
+        <h3>{{ product.name }}</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="number" name="quantity" placeholder="Enter quantity"><br>
+
+            <button name="action" value="IN">Stock IN ➕</button>
+            <button name="action" value="OUT">Stock OUT ➖</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
