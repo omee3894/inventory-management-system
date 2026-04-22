@@ -24,6 +24,7 @@ SECRET_KEY = 'django-insecure-)qke6!a789j!upwu$_ry+a0+bs^pm#t#2kjap2-j77_r@sed6i
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -125,3 +126,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+import os
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
