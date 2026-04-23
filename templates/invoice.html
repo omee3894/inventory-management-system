@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>🧾 Invoice</h2>
+
+<div style="background:#1e2a38;padding:20px;border-radius:10px;width:400px;color:white;">
+
+    <p><b>Product:</b> {{ bill.product.name }}</p>
+    <p><b>Quantity:</b> {{ bill.quantity }}</p>
+    <p><b>Price:</b> ₹{{ bill.product.price }}</p>
+    <p><b>Total:</b> ₹{{ bill.total_price }}</p>
+    <p><b>Date:</b> {{ bill.date }}</p>
+
+</div>
+
+<br>
+
+<!-- ✅ PRINT BUTTON -->
+<button onclick="window.print()" style="padding:10px 20px;background:#4bc0c0;border:none;border-radius:5px;">
+    🖨️ Print Invoice
+</button>
+
+<br><br>
+
+<a href="/billing/">
+    <button>⬅ Back to Billing</button>
+</a>
+
+{% endblock %}

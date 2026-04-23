@@ -178,7 +178,6 @@ def billing(request):
         quantity = int(request.POST['quantity'])
 
         product = Product.objects.get(id=product_id)
-
         total = product.price * quantity
 
         # reduce stock
@@ -186,22 +185,21 @@ def billing(request):
         product.save()
 
         # save bill
-        Bill.objects.create(
+        bill = Bill.objects.create(
             product=product,
             quantity=quantity,
             total_price=total
         )
+
+        # save sale
         Sale.objects.create(
-            product=product,   # or product if string
+            product=product.name,
             quantity=quantity,
             total_price=total
-    )
+        )
 
-        return render(request, 'bill.html', {
-            'product': product,
-            'quantity': quantity,
-            'total': total
-        })
+        # 👉 REDIRECT TO INVOICE PAGE
+        return redirect('invoice', bill_id=bill.id)
 
     return render(request, 'billing.html', {'products': products})
 
@@ -242,3 +240,6 @@ def create_admin(request):
         User.objects.create_superuser('admin', 'admin@gmail.com', 'admin123')
         return HttpResponse("Admin created")
     return HttpResponse("Already exists")
+def invoice(request, bill_id):
+    bill = Bill.objects.get(id=bill_id)
+    return render(request, 'invoice.html', {'bill': bill})
