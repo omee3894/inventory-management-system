@@ -131,3 +131,10 @@ def billing(request):
         })
 
     return render(request, 'billing.html', {'products': products})
+
+from django.contrib.auth.models import User
+
+def create_admin(request):
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_user(username='admin', password='admin123')
+    return HttpResponse("Admin created")

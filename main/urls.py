@@ -9,4 +9,5 @@ urlpatterns = [
     path('edit-product/<int:id>/', edit_product),
     path('stock/<int:id>/', update_stock),
     path('billing/', billing),
+    path('create-admin/', views.create_admin),
 ]
