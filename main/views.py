@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponse
 from .models import Product, Stock, Bill
 def login_page(request):
     if request.method == "POST":
