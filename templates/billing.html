@@ -1,31 +1,21 @@
-{% extends 'base.html' %}
-
-{% block content %}
-
-<h2>Billing</h2>
-
 <form method="POST">
     {% csrf_token %}
 
-    <label>Product</label><br>
-    <select name="product">
+    <label>Product:</label>
+    <select name="product" required>
         {% for product in products %}
-        <option value="{{ product.id }}">{{ product.name }}</option>
+        <option value="{{ product.id }}">
+            {{ product.name }}
+        </option>
         {% endfor %}
-    </select><br>
+    </select>
 
-    <label>Quantity</label><br>
-    <input type="number" name="quantity"><br><br>
+    <br><br>
+
+    <label>Quantity:</label>
+    <input type="number" name="quantity" required>
+
+    <br><br>
 
     <button type="submit">Generate Bill</button>
 </form>
-
-{% if total %}
-<hr>
-<h3>Bill</h3>
-<p>Product: {{ product.name }}</p>
-<p>Quantity: {{ quantity }}</p>
-<p>Total: ₹{{ total }}</p>
-{% endif %}
-
-{% endblock %}
