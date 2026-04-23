@@ -2,6 +2,8 @@ from django.urls import path
 from .views import login_page, dashboard, product_list, add_product, delete_product, edit_product, update_stock, billing, create_admin
 from django.contrib.auth import views as auth_views
 from . import views
+from .views import create_employee
+from django.urls import path, include
 
 urlpatterns = [
     path('', login_page),
@@ -16,4 +18,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('invoice/<int:bill_id>/', views.invoice, name='invoice'),
+    path('create-employee/', create_employee, name='create_employee'),
+    path('', include('inventory_management.urls')),   # or your app name
+
 ]

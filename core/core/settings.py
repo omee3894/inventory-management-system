@@ -144,3 +144,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/login/'
+CSRF_TRUSTED_ORIGINS = [
+    "https://yourdomain.com",
+    "http://yourdomain.com",
+]
+ALLOWED_HOSTS = ["*"]
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True

@@ -10,16 +10,20 @@ from django.db.models.functions import TruncDay, TruncMonth, TruncYear
 from .models import Sale
 from django.utils.timezone import now
 from datetime import timedelta
+from django.contrib.auth.models import User
 def login_page(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-
+        print(username, password)
         if user is not None:
             login(request, user)
-            return redirect('/dashboard')
+            if user.is_staff:
+                login(request, user)
+                return redirect('/')
+            else:
+                return redirect('/billing')
         else:
             return render(request, 'login.html', {'error': 'Invalid credentials'})
 
@@ -78,6 +82,8 @@ def dashboard(request):
     # ---------- TOTAL ----------
     total_sales = sum(daily_data)
     total_orders = Sale.objects.count()
+
+    
 
     return render(request, 'dashboard.html', {
         'total_sales': total_sales,
@@ -170,6 +176,8 @@ def update_stock(request, id):
 
 from .models import Product, Bill
 from .models import Sale
+
+@login_required
 def billing(request):
     products = Product.objects.all()
 
@@ -243,3 +251,24 @@ def create_admin(request):
 def invoice(request, bill_id):
     bill = Bill.objects.get(id=bill_id)
     return render(request, 'invoice.html', {'bill': bill})
+
+
+
+
+@login_required
+def create_employee(request):
+    if not request.user.is_staff:
+        return HttpResponse("Only admin allowed ❌")
+
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+
+        if User.objects.filter(username=username).exists():
+            return render(request, 'create_employee.html', {'error': 'User already exists'})
+
+        User.objects.create_user(username=username, password=password)
+
+        return render(request, 'create_employee.html', {'success': 'Employee created ✅'})
+
+    return render(request, 'create_employee.html')
