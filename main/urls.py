@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import login_page, dashboard, product_list, add_product, delete_product, edit_product, update_stock, billing 
+from .views import login_page, dashboard, product_list, add_product, delete_product, edit_product, update_stock, billing, create_admin
+
 urlpatterns = [
     path('', login_page),
     path('dashboard/', dashboard),
@@ -9,5 +10,5 @@ urlpatterns = [
     path('edit-product/<int:id>/', edit_product),
     path('stock/<int:id>/', update_stock),
     path('billing/', billing),
-    path('create-admin/', views.create_admin),
+    path('create-admin/', create_admin),
 ]
