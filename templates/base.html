@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Inventory System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background-color: #0b1d36;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: #081427;
+        }
+
+        .nav-left button {
+            padding: 6px 12px;
+            background: #4bc0c0;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .nav-right a {
+            margin-left: 10px;
+            text-decoration: none;
+            color: white;
+            background: #4bc0c0;
+            padding: 6px 12px;
+            border-radius: 5px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-left">
+            <button onclick="history.back()">⬅ Back</button>
+        </div>
+
+        <div>
+            <h3>Inventory System</h3>
+        </div>
+
+        <div class="nav-right">
+            <a href="/dashboard/">Dashboard</a>
+            <a href="/products/">Products</a>
+            <a href="/billing/">Billing</a>
+        </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+
+</html>

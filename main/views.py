@@ -95,6 +95,10 @@ def dashboard(request):
 from .models import Product, Stock
 
 def add_product(request):
+
+    if not request.user.is_staff:
+        return HttpResponse("Only admin allowed ❌")
+
     if request.method == "POST":
         name = request.POST['name']
         price = request.POST['price']
@@ -119,6 +123,10 @@ def product_list(request):
 from django.shortcuts import get_object_or_404
 
 def delete_product(request, id):
+
+    if not request.user.is_staff:
+        return HttpResponse("Not allowed ❌")
+
     product = get_object_or_404(Product, id=id)
     product.delete()
     return redirect('/products')
@@ -226,3 +234,11 @@ yearly_sales = (
     .annotate(total=Sum('total_price'))
     .order_by('year')
 )
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+
+def create_admin(request):
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@gmail.com', 'admin123')
+        return HttpResponse("Admin created")
+    return HttpResponse("Already exists")

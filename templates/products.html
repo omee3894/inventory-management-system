@@ -1,33 +1,39 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% block content %}
 
-<head>
-    <title>Products</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+<h2>📦 Products</h2>
 
-<body>
-
-    <h1 style="text-align:center;">Product List 📦</h1>
-<div style="text-align:center; margin-bottom:20px;">
-    <a href="/add-product/">
-        <button>Add Product ➕</button>
+<div style="margin-bottom:15px;">
+    <a href="/dashboard/">
+        <button>⬅ Back</button>
     </a>
 </div>
-    <div class="login-box">
-        <ul>
-            {% for p in products %}
-        <li>
-            {{ p.name }} - ₹{{ p.price }} - Stock: {{ p.quantity }}
-            <a href="/edit-product/{{ p.id }}/">✏️ Edit</a>
-            <a href="/delete-product/{{ p.id }}/" style="color:red;">❌ Delete</a>
-            <a href="/stock/{{ p.id }}/">📦 Update Stock</a>
-        </li>
-            {% endfor %}
-        </ul>
-    </div>
 
-</body>
+<p style="color:red;">TEST BUTTON HERE</p>
+<!-- ADD BUTTON -->
+<a href="/add-product/">
+    <button style="margin-bottom:20px; background:#4bc0c0;">+ Add Product</button>
+</a>
 
-</html>
+<table style="width:100%; border-collapse:collapse; background:#1c2b4a; border-radius:10px; overflow:hidden;">
+    <tr style="background:#081427;">
+        <th style="padding:10px;">Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for product in products %}
+    <tr style="text-align:center; border-bottom:1px solid #333;">
+        <td style="padding:10px;">{{ product.name }}</td>
+        <td>₹{{ product.price }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>
+            <a href="/edit-product/{{ product.id }}/">✏ Edit</a> |
+            <a href="/delete-product/{{ product.id }}/" style="color:red;">❌ Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

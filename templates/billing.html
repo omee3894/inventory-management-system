@@ -1,32 +1,31 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <title>Billing</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block content %}
 
-<body>
+<h2>Billing</h2>
 
-    <h1 style="text-align:center;">Billing 🧾</h1>
+<form method="POST">
+    {% csrf_token %}
 
-    <div class="login-box">
-        <form method="POST">
-            {% csrf_token %}
+    <label>Product</label><br>
+    <select name="product">
+        {% for product in products %}
+        <option value="{{ product.id }}">{{ product.name }}</option>
+        {% endfor %}
+    </select><br>
 
-            <select name="product">
-                {% for p in products %}
-                <option value="{{ p.id }}">{{ p.name }}</option>
-                {% endfor %}
-            </select><br>
+    <label>Quantity</label><br>
+    <input type="number" name="quantity"><br><br>
 
-            <input type="number" name="quantity" placeholder="Quantity"><br>
+    <button type="submit">Generate Bill</button>
+</form>
 
-            <button type="submit">Generate Bill</button>
-        </form>
-    </div>
+{% if total %}
+<hr>
+<h3>Bill</h3>
+<p>Product: {{ product.name }}</p>
+<p>Quantity: {{ quantity }}</p>
+<p>Total: ₹{{ total }}</p>
+{% endif %}
 
-</body>
-
-</html>
+{% endblock %}
