@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import login_page, dashboard, product_list, add_product, delete_product, edit_product, update_stock, billing, create_admin
 from django.contrib.auth import views as auth_views
+from . import views
 
 urlpatterns = [
     path('', login_page),
