@@ -21,3 +21,12 @@ class Bill(models.Model):
     quantity = models.IntegerField()
     total_price = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
+
+class Sale(models.Model):
+    product = models.CharField(max_length=100)
+    quantity = models.IntegerField()
+    total_price = models.FloatField()
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product

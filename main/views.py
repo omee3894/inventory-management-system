@@ -1,8 +1,15 @@
+import json
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Product, Stock, Bill
+from django.db.models import Sum
+from django.db.models.functions import TruncDay, TruncMonth, TruncYear
+from .models import Sale
+from django.utils.timezone import now
+from datetime import timedelta
 def login_page(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -22,14 +29,67 @@ from django.contrib.auth.decorators import login_required
 @login_required
 
 def dashboard(request):
-    from .models import Bill
-    
-    total_sales = sum(b.total_price for b in Bill.objects.all())
-    total_orders = Bill.objects.count()
+    today = now().date()
+
+    # ---------- DAILY (last 7 days) ----------
+    daily_labels = []
+    daily_data = []
+
+    for i in range(6, -1, -1):
+        day = today - timedelta(days=i)
+        total = Sale.objects.filter(date=day).aggregate(
+            Sum('total_price')
+        )['total_price__sum'] or 0
+
+        daily_labels.append(day.strftime("%d %b"))
+        daily_data.append(float(total))
+
+    # ---------- WEEKLY (last 4 weeks) ----------
+    weekly_labels = []
+    weekly_data = []
+
+    for i in range(3, -1, -1):
+        start = today - timedelta(days=(i + 1) * 7)
+        end = today - timedelta(days=i * 7)
+
+        total = Sale.objects.filter(date__range=[start, end]).aggregate(
+            Sum('total_price')
+        )['total_price__sum'] or 0
+
+        weekly_labels.append(f"Week {4 - i}")
+        weekly_data.append(float(total))
+
+    # ---------- MONTHLY (last 6 months) ----------
+    monthly_labels = []
+    monthly_data = []
+
+    for i in range(5, -1, -1):
+        month = (today.month - i - 1) % 12 + 1
+        year = today.year - ((today.month - i - 1) // 12)
+
+        total = Sale.objects.filter(
+            date__month=month,
+            date__year=year
+        ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+        monthly_labels.append(f"{month}/{year}")
+        monthly_data.append(float(total))
+
+    # ---------- TOTAL ----------
+    total_sales = sum(daily_data)
+    total_orders = Sale.objects.count()
 
     return render(request, 'dashboard.html', {
         'total_sales': total_sales,
-        'total_orders': total_orders
+        'total_orders': total_orders,
+        'daily_labels': json.dumps(daily_labels),
+        'daily_data': json.dumps(daily_data),
+
+        'weekly_labels': json.dumps(weekly_labels),
+        'weekly_data': json.dumps(weekly_data),
+
+        'monthly_labels': json.dumps(monthly_labels),
+        'monthly_data': json.dumps(monthly_data),
     })
 
 from .models import Product, Stock
@@ -101,7 +161,7 @@ def update_stock(request, id):
     return render(request, 'stock.html', {'product': product})
 
 from .models import Product, Bill
-
+from .models import Sale
 def billing(request):
     products = Product.objects.all()
 
@@ -123,6 +183,11 @@ def billing(request):
             quantity=quantity,
             total_price=total
         )
+        Sale.objects.create(
+            product=product,   # or product if string
+            quantity=quantity,
+            total_price=total
+    )
 
         return render(request, 'bill.html', {
             'product': product,
@@ -138,3 +203,26 @@ def create_admin(request):
     if not User.objects.filter(username='admin').exists():
         User.objects.create_user(username='admin', password='admin123')
     return HttpResponse("Admin created")
+
+daily_sales = (
+    Sale.objects
+    .annotate(day=TruncDay('date'))
+    .values('day')
+    .annotate(total=Sum('total_price'))
+    .order_by('day')
+)
+
+monthly_sales = (
+    Sale.objects
+    .annotate(month=TruncMonth('date'))
+    .values('month')
+    .annotate(total=Sum('total_price'))
+    .order_by('month')
+)
+yearly_sales = (
+    Sale.objects
+    .annotate(year=TruncYear('date'))
+    .values('year')
+    .annotate(total=Sum('total_price'))
+    .order_by('year')
+)

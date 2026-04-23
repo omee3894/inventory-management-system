@@ -1,47 +1,170 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background-color: #0b1d36;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            background: black;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            margin: 10px 0;
+            text-decoration: none;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #24344d;
+            padding: 20px;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+        }
+
+        select {
+            padding: 8px;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2>Inventory</h2>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/products/">Products</a>
-            <a href="/billing/">Billing</a>
-        </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Inventory</h2>
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/products/">Products</a>
+        <a href="/billing/">Billing</a>
+    </div>
 
-        <!-- Main Content -->
-        <div class="main">
+    <!-- Main -->
+    <div class="main">
 
-            <h1>Dashboard 📊</h1>
+        <h1>Dashboard 📊</h1>
 
-            <div class="cards">
-
-                <div class="card">
-                    <h3>Total Sales</h3>
-                    <p>₹{{ total_sales }}</p>
-                </div>
-
-                <div class="card">
-                    <h3>Total Orders</h3>
-                    <p>{{ total_orders }}</p>
-                </div>
-
+        <!-- Cards -->
+        <div class="cards">
+            <div class="card">
+                <h3>Total Sales</h3>
+                <p>₹ {{ total_sales }}</p>
             </div>
 
+            <div class="card">
+                <h3>Total Orders</h3>
+                <p>{{ total_orders }}</p>
+            </div>
         </div>
+
+        <!-- Chart Section -->
+    <h3>Sales Analytics</h3>
+    
+    <select onchange="loadChart(this.value)">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+    </select>
+    
+    <br><br>
+    
+    <canvas id="salesChart" style="background:#fff; padding:20px; border-radius:10px;"></canvas>
 
     </div>
 
-</body>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    console.log("Script Loaded ✅");
+
+    const daily_labels = JSON.parse('{{ daily_labels|escapejs }}');
+    const daily_data = JSON.parse('{{ daily_data|escapejs }}');
+
+    const weekly_labels = JSON.parse('{{ weekly_labels|escapejs }}');
+    const weekly_data = JSON.parse('{{ weekly_data|escapejs }}');
+
+    const monthly_labels = JSON.parse('{{ monthly_labels|escapejs }}');
+    const monthly_data = JSON.parse('{{ monthly_data|escapejs }}');
+
+    let chart;
+
+    function loadChart(type) {
+        let labels, data;
+
+        if (type === "daily") {
+            labels = daily_labels;
+            data = daily_data;
+        } else if (type === "weekly") {
+            labels = weekly_labels;
+            data = weekly_data;
+        } else {
+            labels = monthly_labels;
+            data = monthly_data;
+        }
+
+        const ctx = document.getElementById('salesChart').getContext('2d');
+
+        if (chart) chart.destroy();
+
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: type + " Sales",
+                    data: data,
+                    borderColor: '#4bc0c0'
+                }]
+            }
+        });
+    }
+
+    // LOAD DEFAULT
+loadChart("daily");
+</script>
+
+</body>
 </html>
