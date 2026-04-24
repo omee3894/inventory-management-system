@@ -19,6 +19,5 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('invoice/<int:bill_id>/', views.invoice, name='invoice'),
     path('create-employee/', create_employee, name='create_employee'),
-    path('', include('main.urls')),# or your app name
-
+   
 ]
